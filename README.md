@@ -51,3 +51,38 @@ pip install fastapi uvicorn[standard] sqlalchemy pydantic
 
 🚀 Ejecutar la API FastAPI
 uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+
+
+🎨 Frontend Vue.js
+
+
+1. Instalar dependencias
+cd frontend
+npm install
+
+2. Ejecutar frontend en modo desarrollo
+npm run serve
+
+
+Accede a la UI:
+http://localhost:8080
+
+3. Construir para producción
+npm run build
+
+
+Esto genera la carpeta dist/ que puedes servir con Nginx o cualquier servidor estático.
+
+📌 Uso
+
+Abre la UI (http://localhost:8080)
+
+Agrega emisoras con nombre, URL y género
+
+Reproduce la emisora con el botón ▶️
+
+⚠️ Notas
+
+Algunos streams pueden no reproducirse en navegador por CORS o formato de audio.
+
+Para uso personal en la red local no hay problema, para acceso público considera proxy o Icecast.

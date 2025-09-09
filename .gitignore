@@ -1,5 +1,6 @@
 # Entorno virtual
 venv/
+stations.db
 
 # Archivos de Python
 __pycache__/
