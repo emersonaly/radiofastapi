@@ -15,4 +15,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    host: '0.0.0.0', // Permite que otros dispositivos en tu red vean la web
+    watch: {
+      usePolling: true, // OBLIGATORIO para detectar cambios via carpeta compartida (Samba/Red)
+    },
+  },
 })
