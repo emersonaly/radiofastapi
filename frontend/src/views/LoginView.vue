@@ -3,16 +3,61 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
+const isRegister = ref(false)
 const username = ref('')
 const password = ref('')
 const error = ref('')
 const loading = ref(false)
 const router = useRouter()
 
-const handleLogin = async () => {
+const toggleAuthMode = () => {
+    isRegister.value = !isRegister.value
+    error.value = ''
+    username.value = ''
+    password.value = ''
+}
+
+const handleSubmit = async () => {
     loading.value = true
     error.value = ''
     
+    if (isRegister.value) {
+        await handleRegister()
+    } else {
+        await handleLogin()
+    }
+}
+
+const handleRegister = async () => {
+    try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username.value,
+                password: password.value
+            })
+        })
+        
+        const data = await res.json()
+        
+        if (res.ok) {
+            // After registration, auto login or ask to login
+            // Let's auto login for better UX
+            await handleLogin()
+        } else {
+            error.value = data.detail || 'Registration failed'
+            loading.value = false
+        }
+    } catch (e) {
+        error.value = 'An error occurred during registration'
+        loading.value = false
+    }
+}
+
+const handleLogin = async () => {
     const formData = new FormData()
     formData.append('username', username.value)
     formData.append('password', password.value)
@@ -42,9 +87,9 @@ const handleLogin = async () => {
 <template>
   <div class="auth-container">
     <div class="auth-card">
-      <h2 class="auth-title">Login</h2>
+      <h2 class="auth-title">{{ isRegister ? 'Register' : 'Login' }}</h2>
       
-      <form @submit.prevent="handleLogin">
+      <form @submit.prevent="handleSubmit">
         <div class="form-group">
             <label class="form-label">Username</label>
             <input v-model="username" type="text" class="form-input" required>
@@ -60,8 +105,14 @@ const handleLogin = async () => {
         </div>
         
         <button type="submit" class="btn" :disabled="loading">
-            {{ loading ? 'Logging in...' : 'Login' }}
+            {{ loading ? 'Processing...' : (isRegister ? 'Register' : 'Login') }}
         </button>
+
+        <p style="margin-top: 1rem; text-align: center;">
+            <a href="#" @click.prevent="toggleAuthMode" style="color: var(--primary-color);">
+                {{ isRegister ? 'Already have an account? Login' : 'Need an account? Register' }}
+            </a>
+        </p>
       </form>
     </div>
   </div>
