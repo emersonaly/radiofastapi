@@ -3,6 +3,6 @@ uvicorn[standard]
 sqlalchemy
 pydantic
 pydantic-settings
-passlib[bcrypt]
+bcrypt
 python-jose[cryptography]
 python-multipart
